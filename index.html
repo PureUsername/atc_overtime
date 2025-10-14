@@ -153,7 +153,6 @@
             <div class="field">
               <div class="label">Invoice Date</div>
               <input id="invoiceDate" type="date" />
-              <div class="hint">Will export as <span class="value">dd/mm/yyyy</span></div>
             </div>
           </div>
           <div class="span-6">
@@ -201,13 +200,13 @@
             </thead>
             <tbody id="rowsBody"></tbody>
           </table>
-          <div class="hint">Each row creates a <span class="value">RENTAL OF LOWBED</span> line (1 MONTH at rental). If <span class="value">OT Hours &gt; 0</span>, it adds an <span class="value">OT CHARGE</span> line using the unit price above.</div>
+          <div class="hint">Each row creates a <span class="value">RENTAL OF LOWBED</span> line (1 MONTH at rental). If <span class="value">OT Hours &gt; 0</span>, it adds an <span class="value">OT CHARGE</span> line using the unit price above. <span class="value">OT Hours &gt; 0</span> can be 0</div>
         </div>
 
         <div class="sep"></div>
 
         <div class="field">
-          <div class="label">Export (Tab-Delimited)</div>
+          <div class="label">Million Invoice Data</div>
           <textarea id="exportBox" class="export" spellcheck="false" readonly></textarea>
           <div class="cluster" style="margin-top:10px">
             <button class="btn ok" id="buildBtn">Build Invoice Data</button>
