@@ -169,15 +169,24 @@
           </div>
         </div>
 
-        <div class="kpi" style="margin-top:12px">
-          <div class="row">
-          <span>OT CHARGE:</span>
-          <span class="value" id="otUnitPricePreview">0.00</span>
-          </div>
-        </div>
-          <div class="hint">OT CHARGE: <span class="value">(rental / 26 / 8) × 1.5</span></div>
+<div class="grid" style="gap: 12px;">
+  <div class="span-6">
+    <div class="field">
+      <div class="label">OT Charge</div>
+      <div class="row">
+        <input id="otCharge" type="number" disabled />
+        <button class="btn" id="copyOtCharge">Copy</button>
+      </div>
+      <div class="hint">
+        Formula:
+        <span class="value">
+          base + (((base / 8) × 1.5) / 60) × max(0, minutes − 60 − 480)
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
 
-        <div class="sep"></div>
 
         <!-- Dynamic rows table -->
         <div class="field">
