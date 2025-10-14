@@ -117,15 +117,19 @@
 
         <div class="field" style="margin-top:14px">
           <div class="label">OT Charge</div>
+          <div class="row">
             <input id="otCharge" type="number" disabled />
             <button class="btn" id="copyOtCharge">Copy</button>
+          </div>
             <div class="hint">Formula: <span class="value">base + (((base / 8) × 1.5) / 60) × max(0, minutes − 60 − 480)</span></div>
         </div>
 
         <div class="field" style="margin-top:14px">
           <div class="label">OT Salary</div>
+          <div class="row">
             <input id="otSalary" type="number" disabled />
             <button class="btn" id="copyOtSalary">Copy</button>
+          </div>
             <div class="hint">Formula: <span class="value">salary + (((salary / 8) × 1.5) / 60) × max(0, minutes − 60 − 480)</span></div>
         </div>
 
@@ -144,7 +148,7 @@
               <input id="invoiceDate" type="date" />
             </div>
           </div>
-          <div class="span-7">
+          <div class="span-8">
             <div class="field">
               <div class="label">Location</div>
               <input id="location" type="text" placeholder="e.g. ULU CHOH - GELANG PATAH" />
@@ -156,7 +160,6 @@
           <div class="label">Rental</div>
           <div class="row">
             <input id="rental" type="number" step="0.01" min="0" value="15500" />
-            <span class="pill">RM</span>
           </div>
         </div>
 
@@ -202,10 +205,8 @@
             <button class="btn ok" id="copyExportBtn">Copy</button>
             <button class="btn warn" id="resetInvoiceBtn">Reset Invoice Builder</button>
           </div>
-          <p class="note" style="margin-top:6px">
-            Format per line:<br/>
-            <span class="value">RLB6</span> · <span class="value">Item</span> · <span class="value">(blank)</span> · <span class="value">Date(dd/mm/yyyy)</span> · <span class="value">D.O No</span> · <span class="value">Truck Plate</span> · <span class="value">Location</span> · <span class="value">(blank)</span> · <span class="value">Qty</span> · <span class="value">UOM</span> · <span class="value">Unit Price</span> · <span class="value">(5 blanks)</span>
-          </p>
+          <div class="hint">Format per line:<br/>
+            <span class="value">RLB6</span> · <span class="value">Item</span> · <span class="value">(blank)</span> · <span class="value">Date(dd/mm/yyyy)</span> · <span class="value">D.O No</span> · <span class="value">Truck Plate</span> · <span class="value">Location</span> · <span class="value">(blank)</span> · <span class="value">Qty</span> · <span class="value">UOM</span> · <span class="value">Unit Price</span> · <span class="value">(5 blanks)</span></div>
         </div>
       </div>
 
