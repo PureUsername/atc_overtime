@@ -210,8 +210,8 @@
           <div class="label">Export (Tab-Delimited)</div>
           <textarea id="exportBox" class="export" spellcheck="false" readonly></textarea>
           <div class="cluster" style="margin-top:10px">
-            <button class="btn ok" id="buildBtn">Build Data</button>
-            <button class="btn" id="copyExportBtn">Copy Export</button>
+            <button class="btn ok" id="buildBtn">Build Invoice Data</button>
+            <button class="btn" id="copyExportBtn">Copy</button>
             <button class="btn warn" id="resetInvoiceBtn">Reset Invoice Builder</button>
           </div>
           <p class="note" style="margin-top:6px">
@@ -333,7 +333,7 @@
 
       const tdDo = document.createElement("td");
       const inpDo = document.createElement("input");
-      inpDo.type="text"; inpDo.placeholder="e.g. DO_12"; inpDo.value = defaults.doNo;
+      inpDo.type="text"; inpDo.placeholder="e.g. DO123"; inpDo.value = defaults.doNo;
       tdDo.appendChild(inpDo);
 
       const tdHours = document.createElement("td");
