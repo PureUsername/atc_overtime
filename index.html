@@ -441,7 +441,7 @@
         l.code, l.item, BLANK, l.date, l.doNo, l.plate, l.location, BLANK,
         String(l.qty), l.uom, l.unitPrice,
         BLANK, BLANK, BLANK, BLANK, BLANK, BLANK
-      ].join(TAB)).join("\n");
+      ].join(TAB)).join("\n") + "\n";
     }
 
     function buildAndShowExport() {
