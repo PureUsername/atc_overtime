@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>OT Calculator + Invoice Builder</title>
+  <title>OT Calculator + KSK Invoice Builder</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root{
@@ -71,8 +71,8 @@
 </head>
 <body>
   <div class="wrap">
-    <h1 class="title">Overtime (OT) Calculator</h1>
-    <p class="subtitle">Original OT duration calculator on the left; new Invoice Builder on the right. The export matches your tab-delimited layout exactly.</p>
+    <h1 class="title">Overtime (OT) Calculator and KSK Invoice Builder</h1>
+    <p class="subtitle">OT duration calculator on the left; KSK Invoice Builder on the right.</p>
 
     <div class="grid">
       <!-- Original Inputs -->
@@ -147,7 +147,7 @@
 
       <!-- NEW: Invoice Builder -->
       <div class="card span-6">
-        <h3 class="label" style="margin:0 0 10px">Invoice Builder</h3>
+        <h3 class="label" style="margin:0 0 10px">KSK Invoice Builder</h3>
         <div class="grid" style="gap:12px">
           <div class="span-6">
             <div class="field">
@@ -212,6 +212,7 @@
           <div class="cluster" style="margin-top:10px">
             <button class="btn ok" id="buildBtn">Build Data</button>
             <button class="btn" id="copyExportBtn">Copy Export</button>
+            <button class="btn warn" id="resetInvoiceBtn">Reset Invoice Builder</button>
           </div>
           <p class="note" style="margin-top:6px">
             Format per line:<br/>
@@ -220,9 +221,6 @@
         </div>
       </div>
 
-      <div class="span-12" style="display:flex; gap:10px; align-items:center; margin-top:-2px">
-        <button class="btn warn" id="resetInvoiceBtn">Reset Invoice Builder</button>
-      </div>
     </div>
   </div>
 
