@@ -116,15 +116,20 @@
           <div class="hint">Duration = End − Start − <b>1 hour</b> (shown in minutes). Standard working time = <b>8 hours</b>.</div>
         </div>
 
-        <div class="field" style="margin-top:14px">
-          <div class="label">OT Charge</div>
-          <div class="row">
+        <div class="grid" style="gap:12px">
+          <div class="span-6">
+            <div class="field">
+              <div class="label">OT Charge</div>
+                        <div class="row">
             <input id="otCharge" type="number" disabled />
             <button class="btn" id="copyOtCharge">Copy</button>
           </div>
-            <div class="hint">Formula: <span class="value">base + (((base / 8) × 1.5) / 60) × max(0, minutes − 60 − 480)</span></div>
-        </div>
+              <div class="hint">Formula: <span class="value">base + (((base / 8) × 1.5) / 60) × max(0, minutes − 60 − 480)</span></div>
+            </div>
+          </div>
 
+
+        
         <div class="field" style="margin-top:14px">
           <div class="label">OT Salary</div>
           <div class="row">
