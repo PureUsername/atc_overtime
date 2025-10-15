@@ -2,145 +2,197 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>OT Calculator + KSK Invoice Builder</title>
+  <title>Overtime & KSK Invoice Builder</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root{
-      --bg:#0b1020; --card:#121a33; --muted:#93a2c8; --text:#eaf0ff;
-      --accent:#6aa7ff; --accent-2:#9be7ff; --ring:#3b6cff; --ok:#10b981; --warn:#f59e0b;
+      --bg:#fff7f9; --card:#ffffff; --muted:#7a7a8a; --text:#2d2a32;
+      --accent:#ffb3c7; --accent-2:#ffd6a5; --ring:#ffb3c7; --ok:#22c55e; --warn:#f59e0b;
       --danger:#ef4444;
     }
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
-      margin:0; background: radial-gradient(1200px 800px at 80% -10%, #1a2a6c22 0%, transparent 60%), var(--bg);
+      margin:0; background: radial-gradient(1200px 800px at 80% -10%, #ffb3c733 0%, transparent 60%), var(--bg);
       color:var(--text); font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; line-height:1.4;
     }
-    .wrap{max-width:1100px; margin:48px auto; padding:0 20px}
+    .wrap{max-width:1400px; margin:48px auto; padding:0 20px}
     .title{font-size:clamp(24px,3.2vw,40px); font-weight:800; margin:0 0 8px;
       background:linear-gradient(90deg,var(--accent),var(--accent-2)); -webkit-background-clip:text; background-clip:text; color:transparent}
     .subtitle{color:var(--muted); margin:0 0 28px; font-size:15px}
     .grid{display:grid; gap:18px; grid-template-columns:repeat(12,1fr)}
     .card{
-      background:linear-gradient(180deg,#101733,#0d142b); border:1px solid #1e2a55; border-radius:16px; padding:18px;
-      box-shadow: 0 10px 30px #00000055 inset, 0 10px 30px #06102a66;
+      background:linear-gradient(180deg,#ffffff,#ffffff); border:1px solid #f7cfe1; border-radius:16px; padding:18px;
+      box-shadow: 0 10px 24px rgba(255,179,199,0.25);
     }
     .span-4{grid-column:span 4} .span-5{grid-column:span 5} .span-6{grid-column:span 6}
-    .span-7{grid-column:span 7} .span-12{grid-column:span 12}
-    @media (max-width:920px){.span-4,.span-5,.span-6,.span-7{grid-column:span 12}}
+    .span-7{grid-column:span 7} .span-8{grid-column:span 8} .span-12{grid-column:span 12}
+    @media (max-width:920px){.span-4,.span-5,.span-6,.span-7,.span-8{grid-column:span 12}}
     .field{display:flex; flex-direction:column; gap:8px}
     .label{font-weight:700; font-size:14px}
     .hint{color:var(--muted); font-size:12px}
     .row{display:flex; gap:10px; align-items:center}
     input[type="number"], input[type="text"], input[type="date"], textarea{
-      width:100%; padding:12px 14px; border-radius:12px; border:1px solid #223066; background:#0b1330; color:var(--text);
+      width:100%; padding:12px 14px; border-radius:12px; border:1px solid #f6c8da; background:#ffffff; color:#2d2a32;
       outline:none; font-size:16px; transition:.15s border,.15s box-shadow;
     }
-    input:focus, textarea:focus{border-color:var(--ring); box-shadow:0 0 0 3px #3b6cff33}
-    input[disabled]{background:#0b1330cc; color:#c7d4ff; opacity:.9}
+    input:focus, textarea:focus{border-color:var(--ring); box-shadow:0 0 0 3px #ffb3c733}
+    input[disabled]{background:#fdf2f8; color:#6b7280; opacity:1}
     .invalid{border-color:#b91c1c !important; box-shadow:0 0 0 3px #ef444433 !important}
     .btn{
-      padding:10px 14px; border-radius:12px; border:1px solid #29428a; background:linear-gradient(180deg,#1a2c66,#16265a);
-      color:white; cursor:pointer; font-weight:700; font-size:14px; transition:.15s transform,.15s opacity,.15s background; white-space:nowrap;
+      padding:10px 14px; border-radius:12px; border:1px solid #f6c8da; background:linear-gradient(180deg,#ffe5ed,#ffe9d6);
+      color:#5a2e36; cursor:pointer; font-weight:700; font-size:14px; transition:.15s transform,.15s opacity,.15s background; white-space:nowrap;
     }
     .btn:hover{transform:translateY(-1px)}
     .btn:active{transform:translateY(0)}
-    .btn.ok{border-color:#0f5132; background:linear-gradient(180deg,#128b60,#0f7a53)}
-    .btn.warn{border-color:#7c3a05; background:linear-gradient(180deg,#b45309,#92400e)}
-    .btn.ghost{background:transparent; border-color:#2a3a77}
+    .btn.ok{border-color:#a7f3d0; background:linear-gradient(180deg,#e7f8f1,#d9f5ea)}
+    .btn.warn{border-color:#fde68a; background:linear-gradient(180deg,#fff3d6,#ffe7b3)}
+    .btn.ghost{background:transparent; border-color:#f6c8da; color:#5a2e36}
     .value{font-family:ui-monospace,Menlo,Consolas,monospace; font-weight:700; letter-spacing:.2px}
     .note{color:var(--muted); font-size:12px; line-height:1.5}
-    .kpi{display:flex; align-items:center; justify-content:space-between; background:linear-gradient(180deg,#0c1433,#0a122e);
-      border:1px solid #1e2a55; border-radius:14px; padding:12px}
+    .kpi{display:flex; align-items:center; justify-content:space-between; background:linear-gradient(180deg,#fff8fb,#fffefd);
+      border:1px solid #f7cfe1; border-radius:14px; padding:12px}
     .kpi .value{font-size:18px}
-    .sep{height:1px; background:#1a2550; margin:12px 0}
+    .sep{height:1px; background:#f6d5e3; margin:12px 0}
     .pill{display:inline-flex; align-items:center; gap:6px; font-size:12px; padding:6px 10px; border-radius:999px; border:1px solid #2a3a77; background:#0b1438}
     table{width:100%; border-collapse:separate; border-spacing:0 10px}
     th, td{padding:10px 12px; text-align:left}
-    thead th{font-size:12px; color:#b6c4ff; text-transform:uppercase; letter-spacing:.06em}
-    tbody tr{background:#0b1330; border:1px solid #223066}
+    thead th{font-size:12px; color:#996a6a; text-transform:uppercase; letter-spacing:.06em}
+    tbody tr{background:#ffffff; border:1px solid #f7cfe1}
     tbody tr td:first-child{border-top-left-radius:12px; border-bottom-left-radius:12px}
     tbody tr td:last-child{border-top-right-radius:12px; border-bottom-right-radius:12px}
     .mini{width:120px}
     .mid{width:180px}
+    .tiny{width:80px}
     .num{text-align:right}
     .danger{color:#fecaca}
     .export{min-height:160px; font-family:ui-monospace,Menlo,Consolas,monospace}
     .cluster{display:flex; gap:10px; flex-wrap:wrap}
+
+    /* Print (PDF) styling */
+    #printArea{display:none}
+    @media print{
+      body{background:#fff; color:#111}
+      .wrap{display:none}
+      #printArea{display:block; padding:8mm 8mm; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;}
+      #printArea h1{margin:0 0 6px; font-size:12pt}
+      #printArea h2{margin:10px 0 6px; font-size:10pt}
+      #printArea .muted{color:#444}
+      #printArea table{width:100%; border-collapse:collapse; border-spacing:0; table-layout:fixed}
+      #printArea th, #printArea td{border:1px solid #ddd; padding:2px 4px; font-size:8pt; line-height:1.15}
+      #printArea tfoot td{font-weight:700}
+      #printArea .kpis{display:grid; grid-template-columns: repeat(2, 1fr); gap:10px; margin-top:10px}
+      #printArea .box{border:1px solid #ddd; padding:8px; border-radius:8px}
+      @page { size: A4; margin: 8mm; }
+    }
+
+    /* ----------------- Fixes & tweaks ----------------- */
+    input.mini{ width:120px !important; }
+    input.mid { width:180px !important; }
+    input.tiny{ width: 80px !important; }
+
+    #otAddRowCount{ width:72px !important; flex:0 0 72px; padding-right:8px; }
+    .label .cluster{ flex-wrap: nowrap; }
+
+    /* Date DDMM preview overlay */
+    .date-wrap{ position:relative; }
+    .date-preview{
+      position:absolute; inset:0; display:none; align-items:center; padding:12px 14px;
+      color:#6b7280; pointer-events:none; font-size:16px; letter-spacing:.02em;
+    }
+    .date-wrap.show-preview .date-preview{ display:flex; }
+
+    /* Show DDMM while typing; hide native date text under overlay */
+    .date-wrap.show-preview input[type="date"]{
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+      caret-color: #6b7280;
+    }
+    .date-preview{
+      z-index: 5;
+      justify-content: flex-start;
+      font-variant-numeric: tabular-nums;
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
     <h1 class="title">Overtime (OT) Calculator and KSK Invoice Builder</h1>
-    <p class="subtitle">OT duration calculator on the left; KSK Invoice Builder on the right.</p>
+    <p class="subtitle">Redesigned OT calculator on the left; KSK Invoice Builder on the right.</p>
 
     <div class="grid">
-      <!-- Original Inputs -->
-      <div class="card span-6">
-        <h3 class="label" style="margin:0 0 10px">Overtime Calculator</h3>
-        <div class="field">
-          <div class="label">Base Price</div>
-          <input id="basePrice" type="number" inputmode="decimal" step="0.01" min="0" value="1000" />
-        </div>
+      <!-- Redesigned Overtime Calculator -->
+      <div class="card span-7">
+        <h3 class="label" style="margin:0 0 10px">Overtime Calculator (Rows)</h3>
 
-        <div class="field" style="margin-top:14px">
-          <div class="label">Salary</div>
-          <input id="salary" type="number" inputmode="decimal" step="0.01" min="0" value="250" />
+        <div class="field">
+          <div class="label" style="display:flex; justify-content:space-between; align-items:center">
+            <span>Daily Entries</span>
+            <div class="cluster">
+              <input id="otAddRowCount" type="number" min="1" step="1" value="1" class="tiny" style="text-align:right" title="Rows to add" />
+              <button class="btn" id="otAddRowBtn">+ Add Row</button>
+              <button class="btn ghost" id="otClearRowsBtn">Clear Rows</button>
+            </div>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th class="mini">Date</th>
+                <th class="mini">Clock In</th>
+                <th class="mini">Clock Out</th>
+                <th class="mini">Working Hours</th>
+                <th class="mini">Billed Hours</th>
+                <th class="mini">Overtime</th>
+                <th style="width:1%"></th>
+              </tr>
+            </thead>
+            <tbody id="otRowsBody"></tbody>
+          </table>
+          
         </div>
 
         <div class="sep"></div>
 
         <div class="grid" style="gap:12px">
           <div class="span-6">
-            <div class="field">
-              <div class="label">Start Time (HHMM)</div>
-              <input id="startTime" type="text" inputmode="numeric" placeholder="e.g. 0900" autocomplete="off" />
-              <div class="hint">Digits only; <span class="value">:</span> will appear automatically.</div>
-            </div>
+            <div class="kpi"><span>Total Billed Hours</span><span class="value" id="totalBilled">0.00 h</span></div>
           </div>
           <div class="span-6">
+            <div class="kpi"><span>Total Working Hours</span><span class="value" id="totalWorking">00:00</span></div>
+          </div>
+          <div class="span-6">
+            <div class="kpi"><span>Total OT Hours</span><span class="value" id="totalOT">00:00</span></div>
+          </div>
+          <div class="span-6">
+            <div class="kpi"><span>Remaining Hours to be bill</span><span class="value" id="remaining">00:00</span></div>
+          </div>
+        </div>
+
+        <div class="sep"></div>
+
+        <div class="grid" style="gap:12px">
+          <div class="span-8">
             <div class="field">
-              <div class="label">End Time (HHMM)</div>
-              <input id="endTime" type="text" inputmode="numeric" placeholder="e.g. 1800" autocomplete="off" />
-              <div class="hint">Overnight supported (e.g. 2200 → 0600)</div>
+              <div class="label">Debit Note</div>
+              <textarea id="debitNote" rows="4">Issue DEBIT NOTE : DN</textarea>
             </div>
           </div>
-        </div>
-
-        <div class="field" style="margin-top:14px">
-          <div class="label">Working Duration</div>
-          <div class="row">
-            <input id="duration" type="number" disabled />
-            <button class="btn" id="copyDuration">Copy</button>
+          <div class="span-4">
+            <div class="field">
+              <div class="label">Debit Note Bill Date</div>
+              <input id="debitNoteDate" type="date" />
+            </div>
           </div>
-          <div class="hint">Duration = End − Start − <b>1 hour</b> (shown in minutes). Standard working time = <b>8 hours</b>.</div>
-        </div>
-
-        <div class="field" style="margin-top:14px">
-          <div class="label">OT Charge</div>
-          <div class="row">
-            <input id="otCharge" type="number" disabled />
-            <button class="btn" id="copyOtCharge">Copy</button>
-          </div>
-            <div class="hint">Formula: <span class="value">base + (((base / 8) × 1.5) / 60) × max(0, minutes − 60 − 480)</span></div>
-        </div>
-
-        <div class="field" style="margin-top:14px">
-          <div class="label">OT Salary</div>
-          <div class="row">
-            <input id="otSalary" type="number" disabled />
-            <button class="btn" id="copyOtSalary">Copy</button>
-          </div>
-            <div class="hint">Formula: <span class="value">salary + (((salary / 8) × 1.5) / 60) × max(0, minutes − 60 − 480)</span></div>
         </div>
 
         <div class="span-12" style="display:flex; gap:10px; align-items:center; margin-top:12px">
-          <button class="btn warn" id="resetBtn">Reset to defaults</button>
+          <button class="btn ok" id="exportPdfBtn">Export to PDF</button>
         </div>
       </div>
 
-      <!-- NEW: Invoice Builder -->
-      <div class="card span-6">
+      <!-- KSK Invoice Builder -->
+      <div class="card span-5">
         <h3 class="label" style="margin:0 0 10px">KSK Invoice Builder</h3>
         <div class="grid" style="gap:12px">
           <div class="span-4">
@@ -216,10 +268,13 @@
     </div>
   </div>
 
+  <!-- Printable area (built on demand) -->
+  <div id="printArea"></div>
+
   <script>
     // ---------- Helpers ----------
     const $ = id => document.getElementById(id);
-    const fmt2 = n => (Number.isFinite(n) ? (Math.round(n*100)/100).toFixed(2) : "");
+    const fmt2 = n => (Number.isFinite(n) ? (Math.round(n*100)/100).toFixed(2) : "0.00");
     const clampNonNeg = n => Math.max(0, Number(n)||0);
 
     // Format YYYY-MM-DD -> dd/mm/yyyy
@@ -230,20 +285,37 @@
       return `${d.padStart(2,"0")}/${m.padStart(2,"0")}/${y}`;
     }
 
-    // ---------- Original OT (kept) ----------
-    // Auto-format HHMM → HH:MM while typing (digits only, max 4)
-    function attachTimeMask(input) {
+    // Parse "HH:MM" OR "HHMM" -> minutes from 00:00; returns null if invalid
+    function parseHHMM(str) {
+      if (!str) return null;
+      const m = /^(\d{1,2}):?(\d{2})$/.exec(String(str).replace(/\s+/g,''));
+      if (!m) return null;
+      let h = Number(m[1]), min = Number(m[2]);
+      if (h < 0 || h > 23 || min < 0 || min > 59) return null;
+      return h*60 + min;
+    }
+
+    function minutesToHHMM(totalMinutes) {
+      if (!Number.isFinite(totalMinutes)) return "00:00";
+      const sign = totalMinutes < 0 ? '-' : '';
+      const m = Math.abs(Math.round(totalMinutes));
+      const hPart = Math.floor(m/60);
+      const minPart = m % 60;
+      return `${sign}${String(hPart).padStart(2,'0')}:${String(minPart).padStart(2,'0')}`;
+    }
+
+    function attachTimeMaskTo(input, onChange) {
       input.addEventListener('input', () => {
         let digits = input.value.replace(/\D+/g, '').slice(0, 4);
         if (digits.length >= 3) input.value = digits.slice(0,2) + ':' + digits.slice(2);
         else if (digits.length >= 1) input.value = digits;
         if (document.activeElement === input) input.setSelectionRange(input.value.length, input.value.length);
-        calc(); // live
+        if (typeof onChange === 'function') onChange();
       });
       input.addEventListener('blur', () => validateTime(input));
-      input.addEventListener('change', calc);
+      input.addEventListener('change', () => { if (typeof onChange === 'function') onChange(); });
       input.addEventListener('keydown', (e) => {
-        if (e.key.toLowerCase() === 'enter') { validateTime(input); calc(); }
+        if (e.key.toLowerCase() === 'enter') { validateTime(input); if (typeof onChange === 'function') onChange(); }
       });
     }
 
@@ -253,64 +325,225 @@
       return ok;
     }
 
-    // Parse "HH:MM" → minutes from 00:00; returns null if invalid
-    function parseHHMM(str) {
-      if (!str) return null;
-      const m = /^(\d{1,2}):?(\d{2})$/.exec(str.replace(/\s+/g,'')); // allows "0900" or "09:00"
-      if (!m) return null;
-      let h = Number(m[1]), min = Number(m[2]);
-      if (h < 0 || h > 23 || min < 0 || min > 59) return null;
-      return h*60 + min;
+    // --- Smart Date (DDMM) -> ISO (YYYY-MM-DD) with current year + live preview ---
+    function setDateFromDDMM(el, ddmm) {
+      const digits = String(ddmm).replace(/\D+/g, '').slice(0, 4);
+      if (digits.length !== 4) return false;
+      const dd = digits.slice(0, 2);
+      const mm = digits.slice(2, 4);
+      const y  = new Date().getFullYear();
+
+      const d = new Date(y, Number(mm) - 1, Number(dd));
+      if (d.getFullYear() !== y || d.getMonth() !== Number(mm) - 1 || d.getDate() !== Number(dd)) return false;
+
+      el.value = `${y}-${mm.padStart(2, '0')}-${dd.padStart(2, '0')}`;
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+      return true;
     }
 
-    function copyFromInput(inputEl, btn) {
-      const val = inputEl.value ?? "";
-      navigator.clipboard.writeText(String(val)).then(() => {
-        flashBtn(btn, "Copied!");
+    function attachSmartDateDDMM(input, onComplete, previewEl, wrapEl) {
+      let buf = '';
+
+      const updatePreview = () => {
+        if (!previewEl || !wrapEl) return;
+        if (input.value) { wrapEl.classList.remove('show-preview'); return; }
+        if (!buf) { wrapEl.classList.remove('show-preview'); previewEl.textContent = ''; return; }
+        let dd = buf.slice(0, 2);
+        let mm = buf.slice(2, 4);
+        const text = buf.length <= 2 ? dd : dd + '/' + mm;
+        previewEl.textContent = text;
+        wrapEl.classList.add('show-preview');
+      };
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key >= '0' && e.key <= '9') {
+          e.preventDefault();
+          buf += e.key;
+          if (buf.length < 4) {
+            updatePreview();
+          } else if (buf.length === 4) {
+            if (setDateFromDDMM(input, buf) && typeof onComplete === 'function') {
+              onComplete();
+            }
+            buf = '';
+            updatePreview();
+          } else {
+            buf = buf.slice(0,4);
+          }
+        } else if (e.key === 'Backspace') {
+          if (buf) { e.preventDefault(); buf = buf.slice(0, -1); updatePreview(); }
+        } else if (e.key === 'Enter') {
+          if (input.value) { e.preventDefault(); if (typeof onComplete === 'function') onComplete(); }
+        }
       });
+
+      input.addEventListener('paste', (e) => {
+        const txt = (e.clipboardData || window.clipboardData)?.getData('text') || '';
+        const digits = txt.replace(/\D+/g, '').slice(0, 4);
+        if (digits.length === 4) {
+          e.preventDefault();
+          if (setDateFromDDMM(input, digits) && typeof onComplete === 'function') onComplete();
+          buf = '';
+          updatePreview();
+        }
+      });
+
+      input.addEventListener('focus', updatePreview);
+      input.addEventListener('blur', () => { buf = ''; updatePreview(); });
+      input.addEventListener('change', () => { buf = ''; updatePreview(); });
     }
 
-    function flashBtn(btn, text="Done") {
-      const original = btn.textContent;
-      btn.textContent = text;
-      btn.style.transform = "scale(0.98)";
-      setTimeout(() => { btn.textContent = original; btn.style.transform = ""; }, 800);
+    // ---------- Redesigned OT: Rows + Totals ----------
+    const otRowsBody = $("otRowsBody");
+
+    function diffMinutes(startStr, endStr) {
+      const s = parseHHMM(startStr);
+      const e = parseHHMM(endStr);
+      if (s === null || e === null) return 0;
+      let end = e;
+      if (end < s) end += 24*60;
+      return Math.max(0, end - s);
     }
 
-    function calc() {
-      const base = parseFloat($("basePrice").value);
-      const salary = parseFloat($("salary").value);
-      const sMin = parseHHMM($("startTime").value);
-      const eMin = parseHHMM($("endTime").value);
+    function addOTRow(defaults={date:"", in:"", out:"", billed:9}) {
+      const tr = document.createElement('tr');
 
-      if (!isFinite(base) || !isFinite(salary)) return;
+      // Date
+      const tdDate = document.createElement('td');
+      const wrap = document.createElement('div');
+      wrap.className = 'date-wrap';
+      const inpDate = document.createElement('input');
+      inpDate.type = 'date'; inpDate.value = defaults.date || '';
+      const datePreview = document.createElement('div');
+      datePreview.className = 'date-preview';
+      wrap.appendChild(inpDate);
+      wrap.appendChild(datePreview);
+      tdDate.appendChild(wrap);
 
-      let durationMin = 0;
-      if (sMin !== null && eMin !== null) {
-        let start = sMin, end = eMin;
-        if (end < start) end += 24*60; // overnight
-        durationMin = Math.max(0, end - start - 60); // deduct 1 hour
-      }
-      $("duration").value = durationMin;
+      // Clock In
+      const tdIn = document.createElement('td');
+      const inpIn = document.createElement('input');
+      inpIn.type = 'text'; inpIn.placeholder = '0900'; inpIn.autocomplete = 'off'; inpIn.value = defaults.in || '';
+      tdIn.appendChild(inpIn);
 
-      // Overtime minutes beyond (deducted) 8 hours
-      const otMinutes = Math.max(0, durationMin - 480);
+      // Clock Out
+      const tdOut = document.createElement('td');
+      const inpOut = document.createElement('input');
+      inpOut.type = 'text'; inpOut.placeholder = '1800'; inpOut.autocomplete = 'off'; inpOut.value = defaults.out || '';
+      tdOut.appendChild(inpOut);
 
-      // 1.5x OT rate for both charge and salary (as per examples)
-      const baseRatePerMin   = ((base   / 8) * 1.5) / 60;
-      const salaryRatePerMin = ((salary / 8) * 1.5) / 60;
+      // Working Hours (disabled)
+      const tdWork = document.createElement('td');
+      const inpWork = document.createElement('input');
+      inpWork.type = 'text'; inpWork.disabled = true; inpWork.placeholder = '00:00';
+      tdWork.appendChild(inpWork);
 
-      let otCharge = base   + baseRatePerMin   * otMinutes;
-      let otSalary = salary + salaryRatePerMin * otMinutes;
+      // Billed Hours (number)
+      const tdBilled = document.createElement('td');
+      const inpBilled = document.createElement('input');
+      inpBilled.type = 'number'; inpBilled.step = '0.25'; inpBilled.min = '0'; inpBilled.value = defaults.billed ?? 9;
+      tdBilled.appendChild(inpBilled);
 
-      if (!Number.isFinite(otCharge) || otCharge < 0) otCharge = 0;
-      if (!Number.isFinite(otSalary) || otSalary < 0) otSalary = 0;
+      // Overtime (disabled)
+      const tdOT = document.createElement('td');
+      const inpOT = document.createElement('input');
+      inpOT.type = 'text'; inpOT.disabled = true; inpOT.placeholder = '00:00';
+      tdOT.appendChild(inpOT);
 
-      $("otCharge").value = fmt2(otCharge);
-      $("otSalary").value = fmt2(otSalary);
+      // Delete button
+      const tdDel = document.createElement('td');
+      const btnDel = document.createElement('button');
+      btnDel.className = 'btn ghost'; btnDel.textContent = '✕'; btnDel.title = 'Remove row';
+      btnDel.addEventListener('click', () => { tr.remove(); recalcOTTotals(); });
+      tdDel.appendChild(btnDel);
+
+      tr.appendChild(tdDate);
+      tr.appendChild(tdIn);
+      tr.appendChild(tdOut);
+      tr.appendChild(tdWork);
+      tr.appendChild(tdBilled);
+      tr.appendChild(tdOT);
+      tr.appendChild(tdDel);
+
+      otRowsBody.appendChild(tr);
+
+      const recomputeRow = () => {
+        const workMin = diffMinutes(inpIn.value, inpOut.value);
+        inpWork.value = minutesToHHMM(workMin);
+        const billedMin = Number(inpBilled.value||0) * 60;
+
+        const otMinRaw = workMin - billedMin;        // may be negative
+        const otMinClamped = Math.max(0, otMinRaw);  // show 0 if negative
+
+        inpOT.value = minutesToHHMM(otMinClamped);
+        recalcOTTotals();
+      };
+
+      attachTimeMaskTo(inpIn, recomputeRow);
+      attachTimeMaskTo(inpOut, recomputeRow);
+
+      // >>> NEW: Update totals when billed hours change
+      inpBilled.addEventListener('input', recomputeRow);
+      inpBilled.addEventListener('change', recomputeRow);
+
+      const autoAdvanceTime = (el, onAdvance) => {
+        el.addEventListener('input', () => {
+          const digits = el.value.replace(/\D/g, '');
+          if (digits.length === 4 && parseHHMM(el.value) !== null) { onAdvance(); }
+        });
+        el.addEventListener('keydown', (e) => { if (e.key === 'Enter' && parseHHMM(el.value) !== null) { onAdvance(); } });
+      };
+
+      autoAdvanceTime(inpIn, () => { inpOut.focus(); inpOut.select?.(); });
+      autoAdvanceTime(inpOut, () => {
+        const next = tr.nextElementSibling;
+        if (next) {
+          const nextDate = next.querySelector('input[type="date"]');
+          if (nextDate) { nextDate.focus(); }
+        }
+      });
+
+      // Smart DDMM on the Date cell with live preview
+      attachSmartDateDDMM(inpDate, () => { inpIn.focus(); inpIn.select?.(); recomputeRow(); }, datePreview, wrap);
+      inpDate.addEventListener('change', recomputeRow);
+
+      recomputeRow();
     }
 
-    // ---------- NEW: Invoice Builder Logic ----------
+    function clearOTRows() { otRowsBody.innerHTML = ''; recalcOTTotals(); }
+
+    function getOTRowsData() {
+      const rows = [];
+      otRowsBody.querySelectorAll('tr').forEach(tr => {
+        const [dateInp, inInp, outInp, workInp, billedInp, otInp] = tr.querySelectorAll('input');
+        const date = dateInp.value || '';
+        const clockIn = (inInp.value||'').trim();
+        const clockOut = (outInp.value||'').trim();
+        const workMin = diffMinutes(clockIn, clockOut);
+        const billed = Number(billedInp.value||0);
+        const otMin = workMin - billed*60; // raw (can be negative)
+        if (date || clockIn || clockOut || billed > 0) {
+          rows.push({ date, clockIn, clockOut, workMin, billedHours: billed, otMin });
+        }
+      });
+      return rows;
+    }
+
+    function recalcOTTotals() {
+      const rows = getOTRowsData();
+      let totalWorkMin = 0, totalBilledHrs = 0;
+      rows.forEach(r => { totalWorkMin += r.workMin; totalBilledHrs += r.billedHours; });
+
+      const totalOTMinRaw = totalWorkMin - totalBilledHrs*60;
+      const totalOTMin = Math.max(0, totalOTMinRaw);  // clamp negative OT to 0
+
+      $("totalWorking").textContent = minutesToHHMM(totalWorkMin);
+      $("totalBilled").textContent  = `${fmt2(totalBilledHrs)} h`;
+      $("totalOT").textContent      = minutesToHHMM(totalOTMin);
+      $("remaining").textContent    = minutesToHHMM(totalOTMin);
+    }
+
+    // ---------- Invoice Builder Logic ----------
     const rowsBody = $("rowsBody");
 
     function computeOtUnitPrice() {
@@ -354,9 +587,7 @@
       rowsBody.appendChild(tr);
     }
 
-    function clearRows() {
-      rowsBody.innerHTML = "";
-    }
+    function clearRows() { rowsBody.innerHTML = ""; }
 
     function getRowsData() {
       const rows = [];
@@ -365,14 +596,11 @@
         const doNo = (doInp.value || "").trim();
         const hours = clampNonNeg(hrsInp.value);
         const plate = (plateInp.value || "").trim();
-        if (doNo || plate || hours > 0) { // include non-empty rows
-          rows.push({ doNo, hours, plate });
-        }
+        if (doNo || plate || hours > 0) { rows.push({ doNo, hours, plate }); }
       });
       return rows;
     }
 
-    // Build the data set (array of lines, not tabbed yet)
     function buildDataLines() {
       const fixedCode = "RLB6";
       const rentalItem = "RENTAL OF LOWBED";
@@ -387,11 +615,7 @@
       const rows = getRowsData();
       const lines = [];
 
-      // Construct lines per row:
-      // 1) RENTAL OF LOWBED, qty 1, UOM MONTH, unit price = rental
-      // 2) If OT Hours > 0, OT CHARGE, qty = hours, UOM HOURS, unit price = otUnit
       rows.forEach(r => {
-        // RENTAL line
         lines.push({
           code: fixedCode,
           item: rentalItem,
@@ -403,7 +627,6 @@
           uom: "MONTH",
           unitPrice: fmt2(rental)
         });
-        // OT line (only if hours > 0)
         if (r.hours > 0) {
           lines.push({
             code: fixedCode,
@@ -422,8 +645,6 @@
       return lines;
     }
 
-    // Restructure to the exact tab-delimited format requested:
-    // RLB6\tITEM\t\tDATE\tDO\tPLATE\tLOCATION\t\tQTY\tUOM\tUNIT_PRICE\t\t\t\t\t
     function toTabbed(lines) {
       const TAB = "\t";
       const BLANK = "";
@@ -443,33 +664,98 @@
 
     function copyExport() {
       const text = $("exportBox").value || buildAndShowExport();
-      navigator.clipboard.writeText(text).then(() => {
-        flashBtn($("copyExportBtn"), "Copied!");
-      });
+      navigator.clipboard.writeText(text).then(() => { flashBtn($("copyExportBtn"), "Copied!"); });
     }
 
-    // ---------- Wire up ----------
-    // Original calc
-    ["basePrice","salary"].forEach(id => {
-      $(id).addEventListener("input", calc);
-      $(id).addEventListener("change", calc);
-    });
-    attachTimeMask($("startTime"));
-    attachTimeMask($("endTime"));
-    $("copyDuration").addEventListener("click", () => copyFromInput($("duration"), $("copyDuration")));
-    $("copyOtCharge").addEventListener("click", () => copyFromInput($("otCharge"), $("copyOtCharge")));
-    $("copyOtSalary").addEventListener("click", () => copyFromInput($("otSalary"), $("copyOtSalary")));
-    $("resetBtn").addEventListener("click", () => {
-      $("basePrice").value = "1000";
-      $("salary").value = "250";
-      $("startTime").value = "";
-      $("endTime").value = "";
-      $("startTime").classList.remove("invalid");
-      $("endTime").classList.remove("invalid");
-      calc();
-    });
+    function flashBtn(btn, text="Done") {
+      const original = btn.textContent;
+      btn.textContent = text;
+      btn.style.transform = "scale(0.98)";
+      setTimeout(() => { btn.textContent = original; btn.style.transform = ""; }, 800);
+    }
 
-    // Invoice builder
+    // ---------- PDF Export (Print) ----------
+    function buildPrintableHTML() {
+      const billDateIso = $("debitNoteDate").value || '';
+      const billDate = fmtDateDMY(billDateIso) || '(no date)';
+      const note = ($("debitNote").value || '').trim();
+
+      const rows = getOTRowsData();
+      const totalWorkMin = rows.reduce((a,r)=>a+r.workMin,0);
+      const totalBilledHrs = rows.reduce((a,r)=>a+r.billedHours,0);
+      const totalOTMinRaw = totalWorkMin - totalBilledHrs*60;
+      const totalOTMin = Math.max(0, totalOTMinRaw); // clamp
+
+      const rowsHtml = rows.map(r => {
+        const otClamped = Math.max(0, r.otMin);
+        return `
+        <tr>
+          <td>${r.date ? fmtDateDMY(r.date) : ''}</td>
+          <td>${r.clockIn || ''}</td>
+          <td>${r.clockOut || ''}</td>
+          <td style="text-align:right">${minutesToHHMM(r.workMin)}</td>
+          <td style="text-align:right">${fmt2(r.billedHours)}</td>
+          <td style="text-align:right">${minutesToHHMM(otClamped)}</td>
+        </tr>`;
+      }).join('');
+
+      return `
+        <div>
+          <h1>Debit Note – Overtime Summary</h1>
+          <div class="muted">Bill Date: <strong>${billDate}</strong></div>
+
+          <h2>Entries</h2>
+          <table>
+            <thead>
+              <tr>
+                <th style="width:16%">Date</th>
+                <th style="width:14%">Clock In</th>
+                <th style="width:14%">Clock Out</th>
+                <th style="width:18%">Working Hours</th>
+                <th style="width:18%">Billed Hours</th>
+                <th style="width:20%">Overtime</th>
+              </tr>
+            </thead>
+            <tbody>${rowsHtml}</tbody>
+            <tfoot>
+              <tr>
+                <td colspan="3" style="text-align:right">Totals</td>
+                <td style="text-align:right">${minutesToHHMM(totalWorkMin)}</td>
+                <td style="text-align:right">${fmt2(totalBilledHrs)}</td>
+                <td style="text-align:right">${minutesToHHMM(totalOTMin)}</td>
+              </tr>
+            </tfoot>
+          </table>
+
+          <div class="kpis" style="margin-top:16px">
+            <div class="box"><div><strong>Total Working Hours</strong></div><div>${minutesToHHMM(totalWorkMin)}</div></div>
+            <div class="box"><div><strong>Total Billed Hours</strong></div><div>${fmt2(totalBilledHrs)} h</div></div>
+            <div class="box"><div><strong>Total OT Hours</strong></div><div>${minutesToHHMM(totalOTMin)}</div></div>
+            <div class="box"><div><strong>Remaining Hours to be bill</strong></div><div>${minutesToHHMM(totalOTMin)}</div></div>
+          </div>
+
+          <h2>Debit Note</h2>
+          <div style="white-space:pre-wrap; border:1px solid #ddd; padding:10px; border-radius:8px; min-height:80px">${note ? note.replace(/[&<>]/g,(c)=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])) : ''}</div>
+
+          </div>`;
+    }
+
+    function exportToPDF() {
+      const area = $("printArea");
+      area.innerHTML = buildPrintableHTML();
+      window.print();
+      setTimeout(()=>{ area.innerHTML = ''; }, 500);
+    }
+
+    // ---------- Wire up: OT ----------
+    $("otAddRowBtn").addEventListener('click', () => {
+      const count = Math.max(1, parseInt($("otAddRowCount").value || "1", 10));
+      for (let i = 0; i < count; i++) addOTRow();
+    });
+    $("otClearRowsBtn").addEventListener('click', clearOTRows);
+    $("exportPdfBtn").addEventListener('click', exportToPDF);
+
+    // ---------- Wire up: Invoice Builder ----------
     ["rental"].forEach(id => {
       $(id).addEventListener("input", () => { computeOtUnitPrice(); });
       $(id).addEventListener("change", () => { computeOtUnitPrice(); });
@@ -489,17 +775,21 @@
       $("exportBox").value = "";
     });
 
-    // Seed with example rows to mirror your sample
+    // ---------- Seed demo ----------
     function seedExample() {
-      $("invoiceDate").value = "2025-10-01"; // 01/10/2025
+      $("invoiceDate").value = "2025-10-01";
       $("location").value = "ULU CHOH - GELANG PATAH";
       $("rental").value = "15500";
       computeOtUnitPrice();
       clearRows();
+
+      clearOTRows();
+      addOTRow({date:"2025-10-01", in:"08:30", out:"19:00", billed:9});
+      addOTRow({date:"2025-10-02", in:"09:00", out:"18:15", billed:9});
+      $("debitNoteDate").value = "2025-10-03";
+      $("debitNote").value = "Issue DEBIT NOTE : DN";
     }
 
-    // Initial compute + seed demo
-    calc();
     seedExample();
     buildAndShowExport();
   </script>
