@@ -216,13 +216,27 @@
           </div>
         </div>
 
-        <div class="kpi" style="margin-top:12px">
+        <!-- NEW: OT Multiplier input -->
+        <div class="field" style="margin-top:12px">
+          <div class="label">OT Multiplier</div>
           <div class="row">
-          <span>OT CHARGE:</span>
-          <span class="value" id="otUnitPricePreview">0.00</span>
+            <input id="otMultiplier" type="number" step="0.1" min="0" value="1.5" class="tiny" />
+            <span class="hint">e.g. 1.0, 1.5, 2.0 …</span>
           </div>
         </div>
-          <div class="hint">OT CHARGE: <span class="value">(rental / 26 / 8) × 1.5</span></div>
+
+        <div class="kpi" style="margin-top:12px">
+          <div class="row">
+            <span>OT CHARGE:</span>
+            <span class="value" id="otUnitPricePreview">0.00</span>
+          </div>
+        </div>
+        <div class="hint">
+          OT CHARGE:
+          <span class="value">
+            (rental / 26 / 8) × <span id="otMultiplierHint">1.5</span>
+          </span>
+        </div>
 
         <div class="sep"></div>
 
@@ -482,7 +496,7 @@
       attachTimeMaskTo(inpIn, recomputeRow);
       attachTimeMaskTo(inpOut, recomputeRow);
 
-      // >>> NEW: Update totals when billed hours change
+      // Update totals when billed hours change
       inpBilled.addEventListener('input', recomputeRow);
       inpBilled.addEventListener('change', recomputeRow);
 
@@ -546,10 +560,24 @@
     // ---------- Invoice Builder Logic ----------
     const rowsBody = $("rowsBody");
 
+    // UPDATED: use configurable OT multiplier
     function computeOtUnitPrice() {
       const rental = parseFloat($("rental").value) || 0;
-      const unit = rental / 26 / 8 * 1.5;
+      let multiplier = parseFloat($("otMultiplier")?.value);
+
+      if (!Number.isFinite(multiplier) || multiplier <= 0) {
+        multiplier = 1.5; // fallback default
+      }
+
+      const unit = rental / 26 / 8 * multiplier;
       $("otUnitPricePreview").textContent = fmt2(unit);
+
+      // Update the formula hint display if it exists
+      const hintSpan = $("otMultiplierHint");
+      if (hintSpan) {
+        hintSpan.textContent = fmt2(multiplier);
+      }
+
       return unit;
     }
 
@@ -756,7 +784,7 @@
     $("exportPdfBtn").addEventListener('click', exportToPDF);
 
     // ---------- Wire up: Invoice Builder ----------
-    ["rental"].forEach(id => {
+    ["rental", "otMultiplier"].forEach(id => {
       $(id).addEventListener("input", () => { computeOtUnitPrice(); });
       $(id).addEventListener("change", () => { computeOtUnitPrice(); });
     });
@@ -769,6 +797,7 @@
       $("invoiceDate").value = "";
       $("location").value = "";
       $("rental").value = "15500";
+      if ($("otMultiplier")) $("otMultiplier").value = "1.5";
       computeOtUnitPrice();
       clearRows();
       addRow({doNo:"", hours:"", plate:""});
@@ -780,6 +809,7 @@
       $("invoiceDate").value = "2025-10-01";
       $("location").value = "ULU CHOH - GELANG PATAH";
       $("rental").value = "15500";
+      if ($("otMultiplier")) $("otMultiplier").value = "1.5";
       computeOtUnitPrice();
       clearRows();
 
